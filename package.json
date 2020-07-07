@@ -1,0 +1,26 @@
+{
+  "name": "aave-protocol",
+  "version": "1.0.0",
+  "description": "Open source implementation of the Aave Decentralized Lending Pools protocol. Version 1.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gititGoro/aave-protocol.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gititGoro/aave-protocol/issues"
+  },
+  "homepage": "https://github.com/gititGoro/aave-protocol#readme",
+  "dependencies": {
+    "openzeppelin-solidity": "2.5.0"
+  }
+}
