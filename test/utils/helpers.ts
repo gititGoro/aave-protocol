@@ -1,5 +1,5 @@
 import {
-  ERC20DetailedInstance,
+  Erc20DetailedInstance as ERC20DetailedInstance,
   LendingPoolInstance,
   LendingRateOracleInstance,
   ATokenInstance,

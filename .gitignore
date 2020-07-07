@@ -8,3 +8,5 @@ coverage/
 thegraph/subgraph.yaml
 originalbuild/
 build/
+utils/
+currentDir.txt
