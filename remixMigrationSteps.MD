@@ -30,7 +30,44 @@ Click the copy icon to retrieve the address. Don't worry about ABIs. The reposit
 
 
 ```
- LendingPoolAddressesProvider Kovan address: 0x52D581f9fD911AA7A06ca10b234887877Dd7d397
+ LendingPoolAddressesProvider Kovan address: 
+ 0x1a84C655a3F178BeA02DcBc9F46Bc84c17c36FC0
 ```
 
-dfsdfs
+Next we should look at all the expected contracts in LendingpoolAddressesProvider and deploy them and their dependencies.
+We'd have to start with their dependencies first. The best dependencies to start with are those that have none. The diagram below is the core architecture of the Aave smart contracts:
+
+![](./remixMigrationImages/protocol-architecture.png)
+
+let's start the LendingPoolConfigurator. This contract was written before EIP-170 which sets an upper limit on contract size. To get around this, we set Remix to optimize compile.
+
+We initially get an address for LendingPoolConfigurator. We inform LendingPoolAddress provider of its existence by calling the set function for Configurator. This spawns a new proxy contract. If we call LendingPoolAddressProvider.getLendingPoolConfigurator, we now get a new address. This is the configurator address in the system.
+![](./remixMigrationImages/configuratorSetOnAddressProvider.png)
+```
+LendingPoolConfigurator: 0xF1bEF1a345371716B607590003f2aBC180C7036C
+```
+
+Following the steps above, 
+
+```
+LendingPoolParametersProvider: 0x71B78196dFB678A6B796AfaBFe629a1A42BCD32d
+```
+
+We'll continue to deploy and initialize all the contracts listed at the top of lendingPoolAddressProvider. Note that some of the contracts aren't wrapped in proxies so the address won't change on set. ![](./remixMigrationImages/addressproviderproxies.png)
+
+```
+LendingPool: 0x667091e8c1FA63977C1Ce99Ae5653Af677C17655
+LendingPoolCore: 0x6444Bff5143F4722A47877774A39dD9250D529A5
+LendingPoolConfigurator: 0xF1bEF1a345371716B607590003f2aBC180C7036C
+LendingPoolParametersProvider: 0x71B78196dFB678A6B796AfaBFe629a1A42BCD32d
+LendingPoolManager: this is a wallet address (preferably multisig). For simplicity, I'll initialize it as my kovan deploy address: 0x4011Ba13ACD2E078B0234C125D04e5C61803D07d
+LendingPoolLiquidationManager: 0xb0A659f600Ef834BA2c172EA790243bCAbe098ed
+LendingPoolDataProvider: 0x9e5d3229359eB3640D60066cBb1de83F216158CE
+EthereumAddress - unused in this contract
+PriceOracle -> first deployed the provided mock PriceOracle: 0x31DAe81A5c6C435f8d7d43990822775181bA1403
+LendingRateOracle: 0xDF9DD372dfd530972e776E91b4C9baD7d334F741
+FeeProvider: 0xdd42eb4633aAE0609f72D8163edDa309f2E0f4c6
+TokenDistributor: 0x8b48d8eE7B81988df5321f62a73Cb0AaD2B1F412
+```
+Note on the price oracle: I've given arbitrary values for the ETHUSD and Kovan Dai price so that zero isn't returned. Once the reserves are deployed, I'll update for each token.
+
