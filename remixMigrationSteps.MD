@@ -1,9 +1,10 @@
 
 # Importing into Remix
-Use Firefox browser. The compiler in Remix sometimes crashes in other browsers
+
 1. You'll need to create a blank file in Remix. This allows you to add directories
 2. Create all the top level directories and treat the node dependecies like openzeppelin-solidity as a top level contract
-3. Add the subdirectories. At this point you shouldn't have added any code.
+  For instance, the contracts often import "openzeppelin....". Change this to "./openzeppelin..." then create a directory in remix with that name and copy accross everything from the node_modules
+3. Add the subdirectories to your main directors. At this point you shouldn't have added any code.
 4. Add the files and copy in the code.
 5. Remember to change the openzeppelin-solidity import references to use relative paths.
 6. Compile each file to check that you've imported correctly. 
@@ -26,7 +27,7 @@ Your deployed contract will be displayed in a list.
 
 Click the copy icon to retrieve the address. Don't worry about ABIs. The repository has them already.
 
-  **Note: all deployments happening from 0x4011Ba13ACD2E078B0234C125D04e5C61803D07d. Since many of these contracts are owned, ownership transfer will have to occur at some point.**
+  **Note: all deployments are happening from 0x4011Ba13ACD2E078B0234C125D04e5C61803D07d. Since many of these contracts are owned, ownership transfer will have to occur at some point. I've transferred the ownership of LendingPoolAddressesProvider to the address you supplied. I've also set you as the LendingPoolManager. This should give you sufficient admin power**
 
 
 ```
@@ -60,7 +61,7 @@ LendingPool: 0x667091e8c1FA63977C1Ce99Ae5653Af677C17655
 LendingPoolCore: 0x6444Bff5143F4722A47877774A39dD9250D529A5
 LendingPoolConfigurator: 0xF1bEF1a345371716B607590003f2aBC180C7036C
 LendingPoolParametersProvider: 0x71B78196dFB678A6B796AfaBFe629a1A42BCD32d
-LendingPoolManager: this is a wallet address (preferably multisig). For simplicity, I'll initialize it as my kovan deploy address: 0x4011Ba13ACD2E078B0234C125D04e5C61803D07d
+LendingPoolManager: this is a wallet address (preferably multisig). For simplicity, I've set it to your address
 LendingPoolLiquidationManager: 0xb0A659f600Ef834BA2c172EA790243bCAbe098ed
 LendingPoolDataProvider: 0x9e5d3229359eB3640D60066cBb1de83F216158CE
 EthereumAddress - unused in this contract
@@ -69,7 +70,7 @@ LendingRateOracle: 0xDF9DD372dfd530972e776E91b4C9baD7d334F741
 FeeProvider: 0xdd42eb4633aAE0609f72D8163edDa309f2E0f4c6
 TokenDistributor: 0x8b48d8eE7B81988df5321f62a73Cb0AaD2B1F412
 ```
-Note on the price oracle: I've given arbitrary values for the ETHUSD and Kovan Dai price so that zero isn't returned. Once the reserves are deployed, I'll update for each token.
+Note on the price oracle: I've given arbitrary values for the ETHUSD and Kovan Dai price so that zero isn't returned. Once the reserves are deployed, you can update for each token
 
 We then add the addresses for all the mock contracts
 First the MockAggregators
@@ -96,12 +97,12 @@ Then Flashloans:
 MockFlashLoanReceiver: 0x792c2aadB101Ee3C3F3D9487F2E899DdE8A34e27
 ```
 
-The LendingPoolcore links to a library called the core library. a library is a stateless contract that provides helper functions. A very common library in use is OpenZeppelin's SafeMath which provides basic arithmetic functions that don't allow unsigned interger under- or overflows
+The LendingPoolcore links to a library called the core library. a library is a stateless contract that provides helper functions. A very common library in use is OpenZeppelin's SafeMath which provides basic arithmetic functions that don't allow unsigned integer under- or overflows
 
 ```
 CoreLibrary: 0x98Bc70e12eCd10Bf7dd52c27003703A6F96bBFF5
 ```
-
+## Aave terminology
 When an ERC20 token is added to Aave for deposits and loans, it is referred to as a reserve. Each reserve requires it's own ReserveInterestRateStrategy contract.
 This contract informs Aave how to set borrowing and savings rates. I've deployed one for the Kovan Dai token as an example:
 
