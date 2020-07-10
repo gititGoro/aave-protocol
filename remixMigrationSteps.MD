@@ -71,3 +71,41 @@ TokenDistributor: 0x8b48d8eE7B81988df5321f62a73Cb0AaD2B1F412
 ```
 Note on the price oracle: I've given arbitrary values for the ETHUSD and Kovan Dai price so that zero isn't returned. Once the reserves are deployed, I'll update for each token.
 
+We then add the addresses for all the mock contracts
+First the MockAggregators
+```
+BAT: 0x2D49d05B28533365F24E0FA0FF481A18C8178c32
+DAI: 0xA9B6E1f006163FB07698071b4B5a9cf13542d1eA
+KNC: 0x3fcB24dC871e7318905947272A26E9b1f9F1B944
+LEND: 0x17b8DABd83a0140e70D96D0733C64645A2B5CdbF
+LINK: 0xAA6ceA3E84A2717035b9644f9Ff54C74D51259C6
+MANA: 0xa5104818BB8D9a2023f0BbEE039f9dFaA26284F2
+MKR: 0xEbA960fe41A32E52D32C77c34fE5971712FD3a3e
+REP: 0x7031F74E8cCe0Ec2c8BfB5Fec688bD6ccb810B26
+SUSD: 0x07136Ccc2e89264ECbed87397eA863389fC01DFD
+TUSD: 0xEd1ec66F1246243861aEE307060C5baEbBbd4fB7
+USDC: 0xFd1f4747cBfbBb1E5bE7f290dfeD4b5BD3C4477b
+USDT: 0x1571f7693152086588A63b04a92AaF4A3c70ab4d
+WBTC: 0x5968451B5Bff8fbD5446C71172450302880Dd95c
+ZRX: 0xFf00975111a045099B3A13610DA9Da1842b8D491
+```
+
+Then Flashloans:
+
+```
+MockFlashLoanReceiver: 0x792c2aadB101Ee3C3F3D9487F2E899DdE8A34e27
+```
+
+The LendingPoolcore links to a library called the core library. a library is a stateless contract that provides helper functions. A very common library in use is OpenZeppelin's SafeMath which provides basic arithmetic functions that don't allow unsigned interger under- or overflows
+
+```
+CoreLibrary: 0x98Bc70e12eCd10Bf7dd52c27003703A6F96bBFF5
+```
+
+When an ERC20 token is added to Aave for deposits and loans, it is referred to as a reserve. Each reserve requires it's own ReserveInterestRateStrategy contract.
+This contract informs Aave how to set borrowing and savings rates. I've deployed one for the Kovan Dai token as an example:
+
+```
+ReserveInterestRateStrategy for Dai: 0x2963bF52c63935CDa43aD774e1E2B126A81594FE
+Kovan Dai: 0xc4375b7de8af5a38a93548eb8453a498222c4ff2
+```
