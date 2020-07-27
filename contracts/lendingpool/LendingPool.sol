@@ -268,7 +268,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
     uint256 public constant UINT_MAX_VALUE = uint256(-1);
 
-    uint256 public constant LENDINGPOOL_REVISION = 0x2;
+    uint256 public constant LENDINGPOOL_REVISION = 0x100;
 
     function getRevision() internal pure returns (uint256) {
         return LENDINGPOOL_REVISION;
@@ -299,7 +299,6 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     function deposit(address _reserve, uint256 _amount, uint16 _referralCode)
         external
         payable
-        nonReentrant
         onlyActiveReserve(_reserve)
         onlyUnfreezedReserve(_reserve)
         onlyAmountGreaterThanZero(_amount)
@@ -310,15 +309,14 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
 
         core.updateStateOnDeposit(_reserve, msg.sender, _amount, isFirstDeposit);
 
-        //minting AToken to user 1:1 with the specific exchange rate
-        aToken.mintOnDeposit(msg.sender, _amount);
-
         //transfer to the core contract
         core.transferToReserve.value(msg.value)(_reserve, msg.sender, _amount);
 
+        //minting AToken to user 1:1 with the specific exchange rate
+        aToken.mintOnDeposit(msg.sender, _amount);
+
         //solium-disable-next-line
         emit Deposit(_reserve, msg.sender, _amount, _referralCode, block.timestamp);
-
     }
 
     /**

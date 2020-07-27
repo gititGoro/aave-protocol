@@ -110,3 +110,64 @@ This contract informs Aave how to set borrowing and savings rates. I've deployed
 ReserveInterestRateStrategy for Dai: 0x2963bF52c63935CDa43aD774e1E2B126A81594FE
 Kovan Dai: 0xc4375b7de8af5a38a93548eb8453a498222c4ff2
 ```
+
+# Reserve initialization
+In Aave, the word for ERC20 token assets is reserve. To begin using Aave, we have to initialize the reserves so that deposits, borrows and liquidations can occur.
+This section outlines the process adding an asset as a reserve. Only a LendingPoolManager account can add a reserve to the system.
+
+### InterestRateStrategy
+Each reserve has an a corresponding contract that determines the interest rate strategy for that reserve. Before initializing the reserves, we need to deploy this InterestRateStrategyContract for each reserve. Take note that the interest rate fields are expressed in RAY units. 1 RAY is equal to 10^27. S if you want to set an interest rate of 20% then you'll supply the value of 0.2*10^27 as the parameter value.
+
+### Lending Rate and Price Oracles
+While oracles should be updated in real time, it won't hurt to initialize them with non-zero values for each asset for debugging purposes. The Lending Rate values are RAY but the price values are WAD. 1 WAD = 10^18, the same precision as Ether and most ERC20 tokens. Bear in mind that on mainnet WBTC has 8 decimal places.
+
+## Initialize Reserve
+The LendingPoolConfigurator provides a method to initialize a reserve. In the process, the corresponding AToken is deployed. LendingPoolCore provides getReservATokenAddress which takes the base token as the sole parameter. After initializing, the following AToken addresses were retrieved:
+
+```
+ABAT: 0x07A9B5280Ca782D413B4f10Cd5dce82b1Df6977d
+ADAI: 0x3b6F3dcdE173313BE7A0C731cD3ebb0753f3d95B
+AKNC: 0x6F019886434A0EDC960f904f85d1CDCdbD071aca
+ALEND: 0x8b73dc25B7707d7605f1Deb252274c2A68f62da5
+ALINK: 0x72067d0b07E9FB76951382c3458382F544f4D330
+AMANA: 0x65191a21D93F85480CF5889c8a1428D005203539
+AMKR: 0xcC95c7F4B4aBc541459B8cB4E88368FCeF719f9D
+AREP: 0x211774E88823fB1D4bf36933eA4D39E77a158e89
+ASUSD: 0xAac86835b989728d4cbB100673B6A2a477ABD401
+ATUSD: 0xB7779F400A8b16E512d916C31D0BEdDA7d0E9a78
+AUSDC: 0x030D7203C27D416d929A1361Effda4fa86B62303
+AUSDT: 0x4dF4aaC4999EaBEd7219DB6f9a4C802C355Cf786
+AWBTC: 0x9fcAb70F66af54ec1bf541D05ba73B45B677f132
+AZRX: 0x7C084B11d7Ed6439bEC860a1FAeE4ee3152B1E21
+```
+
+### Mint reserve tokens for user
+The next task would be to mint some token to deposit. In remix, you can deploy a contract to an existing address. Recompile a mock token such as MockDAI and paste the existing MockDai address in the at textbox. Then mint an amount to deposit.
+
+The mock token addresses are:
+
+```
+MockBAT": "0x719d113f2c0D11f9797c3BC8D261323820c2132e
+MockDAI": "0x6DCBFbcd99D7b989De348aC06c8944Aa4738192a
+MockKNC": "0x1E8e017fe09d8D0c652458822Bc87e46Ca3e42Ea
+MockLEND": "0xb6b225BD0F0506CF431EA492e90fBfD58589d6D5
+MockLINK": "0x5318CDd1D39005fCFDbc8Ca6662C1074A83119dD
+MockMANA": "0x5429A60B8fC7E2002840eA789ebD94FC253e102A
+MockMKR": "0xEc218Ca1D57c7aB9ae2a238D9BE7B97e807DAd6B
+MockREP": "0x17250e05D879670c1d7aF055A287Dd46b1cc6c88
+MockSUSD": "0xfC387B2522D80CF163b84B36E14AfCa80409b5a4
+MockTUSD": "0x1784e824fE8CFCA87719fB183273948BdD99CA0B
+MockUSDC": "0x450b5e24067d717e52Ab40990Fb9Ff7c48c4Ea98
+MockUSDT": "0x29FA0d0d781Ecc5A40294Aac5B7aC28011f285c7
+MockWBTC": "0x71F90B8a9540e73B8Ca1E4eEd143de694A78ABE1
+MockZRX": "0x42Df5A2E1b0Be4CA0936dDD5d73A8c29D7b90335
+```
+
+### Activate Reserves
+Before actions on a reserve can happen, they have to be activated. LendingPoolConfigurator has the activateReserve function.
+
+### Enable Borrowing
+LendingPoolConfigurator is required once more to enable borrowing on the reserve
+
+## ERC20.Approve
+If the token is not eth, you first have to approve the LendingPoolCore address before depositing. The address can be retrieved from the LendingPoolAddressesProvider. 

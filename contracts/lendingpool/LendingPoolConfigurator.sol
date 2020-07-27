@@ -272,9 +272,9 @@ contract LendingPoolConfigurator is VersionedInitializable {
     **/
     function enableReserveAsCollateral(
         address _reserve,
-        uint256 _baseLTVasCollateral,
-        uint256 _liquidationThreshold,
-        uint256 _liquidationBonus
+        uint256 _baseLTVasCollateral, //1-100
+        uint256 _liquidationThreshold, //WAD
+        uint256 _liquidationBonus//Wad
     ) external onlyLendingPoolManager {
         LendingPoolCore core = LendingPoolCore(poolAddressesProvider.getLendingPoolCore());
         core.enableReserveAsCollateral(
