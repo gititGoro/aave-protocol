@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.14;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
@@ -299,6 +299,7 @@ contract LendingPool is ReentrancyGuard, VersionedInitializable {
     function deposit(address _reserve, uint256 _amount, uint16 _referralCode)
         external
         payable
+        nonReentrant
         onlyActiveReserve(_reserve)
         onlyUnfreezedReserve(_reserve)
         onlyAmountGreaterThanZero(_amount)
