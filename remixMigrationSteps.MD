@@ -27,7 +27,7 @@ Your deployed contract will be displayed in a list.
 
 Click the copy icon to retrieve the address. Don't worry about ABIs. The repository has them already.
 
-  **Note: all deployments are happening from 0x4011Ba13ACD2E078B0234C125D04e5C61803D07d. Since many of these contracts are owned, ownership transfer will have to occur at some point. I've transferred the ownership of LendingPoolAddressesProvider to the address you supplied. I've also set you as the LendingPoolManager. This should give you sufficient admin power**
+  **Note: all deployments are happening from 0x4011Ba13ACD2E078B0234C125D04e5C61803D07d. Since many of these contracts are owned, ownership transfer will have to occur at some point. In addition to the owner, the contracts have a role LendingPoolManager. This is a human controlled account that has authority to control vital actions at the core of the protocol.**
 
 
 ```
@@ -112,11 +112,11 @@ Kovan Dai: 0xc4375b7de8af5a38a93548eb8453a498222c4ff2
 ```
 
 # Reserve initialization
-In Aave, the word for ERC20 token assets is reserve. To begin using Aave, we have to initialize the reserves so that deposits, borrows and liquidations can occur.
+To begin using Aave, we have to initialize the reserves so that deposits, borrows and liquidations can occur.
 This section outlines the process adding an asset as a reserve. Only a LendingPoolManager account can add a reserve to the system.
 
 ### InterestRateStrategy
-Each reserve has an a corresponding contract that determines the interest rate strategy for that reserve. Before initializing the reserves, we need to deploy this InterestRateStrategyContract for each reserve. Take note that the interest rate fields are expressed in RAY units. 1 RAY is equal to 10^27. S if you want to set an interest rate of 20% then you'll supply the value of 0.2*10^27 as the parameter value.
+Each reserve has a corresponding contract that determines the interest rate strategy for that reserve. Before initializing the reserves, we need to deploy this InterestRateStrategyContract for each reserve. Take note that the interest rate fields are expressed in RAY units. 1 RAY is equal to 10^27. S if you want to set an interest rate of 20% then you'll supply the value of 0.2*10^27 as the parameter value.
 
 ### Lending Rate and Price Oracles
 While oracles should be updated in real time, it won't hurt to initialize them with non-zero values for each asset for debugging purposes. The Lending Rate values are RAY but the price values are WAD. 1 WAD = 10^18, the same precision as Ether and most ERC20 tokens. Bear in mind that on mainnet WBTC has 8 decimal places.
@@ -167,7 +167,9 @@ MockZRX": "0x42Df5A2E1b0Be4CA0936dDD5d73A8c29D7b90335
 Before actions on a reserve can happen, they have to be activated. LendingPoolConfigurator has the activateReserve function.
 
 ### Enable Borrowing
-LendingPoolConfigurator is required once more to enable borrowing on the reserve
+LendingPoolConfigurator is required once more to enable borrowing on the reserve.
+LendingPoolCore is required to enable the reserve to be used as collateral
 
 ## ERC20.Approve
 If the token is not eth, you first have to approve the LendingPoolCore address before depositing. The address can be retrieved from the LendingPoolAddressesProvider. 
+
